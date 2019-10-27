@@ -17,9 +17,10 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        int position = resumePosition(resume.getUuid());
+        String uuid = resume.getUuid();
+        int position = getResumePosition(uuid);
         if (position != -1) {
-            System.out.println("Такое резюме уже есть в базе");
+            System.out.println("Резюме с uuid=" + uuid + " уже есть в базе");
         } else if (size == storage.length) {
             System.out.println("Переполнение базы резюме");
         } else {
@@ -29,32 +30,33 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int position = resumePosition(uuid);
+        int position = getResumePosition(uuid);
         if (position != -1) {
             return storage[position];
         } else {
-            System.out.println("Такого резюме нет в базе");
+            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
             return null;
         }
     }
 
     public void delete(String uuid) {
-        int position = resumePosition(uuid);
+        int position = getResumePosition(uuid);
         if (position != -1) {
             storage[position] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("Такого резюме нет в базе");
+            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         }
     }
 
     public void update(Resume resume) {
-        int position = resumePosition(resume.getUuid());
+        String uuid = resume.getUuid();
+        int position = getResumePosition(uuid);
         if (position != -1) {
             storage[position] = resume;
         } else {
-            System.out.println("Такого резюме нет в базе");
+            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         }
     }
 
@@ -69,9 +71,9 @@ public class ArrayStorage {
         return size;
     }
 
-     private int resumePosition(String uuid) {
+     private int getResumePosition(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid() == uuid) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
