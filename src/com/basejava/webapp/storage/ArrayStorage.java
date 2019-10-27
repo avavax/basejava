@@ -52,8 +52,7 @@ public class ArrayStorage {
     public void update(Resume resume) {
         int position = resumePosition(resume.getUuid());
         if (position != -1) {
-            // TODO реализация метода update
-
+            storage[position] = resume;
         } else {
             System.out.println("Такого резюме нет в базе");
         }
