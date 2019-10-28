@@ -7,8 +7,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-
+    private static final int STORAGE_LIMIT = 10_000;
+    private Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
     public void clear() {
@@ -18,10 +18,10 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         String uuid = resume.getUuid();
-        int position = getResumePosition(uuid);
+        int position = getPosition(uuid);
         if (position != -1) {
             System.out.println("Резюме с uuid=" + uuid + " уже есть в базе");
-        } else if (size == storage.length) {
+        } else if (size == STORAGE_LIMIT) {
             System.out.println("Переполнение базы резюме");
         } else {
             storage[size] = resume;
@@ -30,33 +30,32 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int position = getResumePosition(uuid);
-        if (position != -1) {
-            return storage[position];
-        } else {
+        int position = getPosition(uuid);
+        if (position == -1) {
             System.out.println("Резюме с uuid=" + uuid + " нет в базе");
             return null;
         }
+        return storage[position];
     }
 
     public void delete(String uuid) {
-        int position = getResumePosition(uuid);
-        if (position != -1) {
+        int position = getPosition(uuid);
+        if (position == -1) {
+            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
+        } else {
             storage[position] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-        } else {
-            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         }
     }
 
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        int position = getResumePosition(uuid);
-        if (position != -1) {
-            storage[position] = resume;
-        } else {
+        int position = getPosition(uuid);
+        if (position == -1) {
             System.out.println("Резюме с uuid=" + uuid + " нет в базе");
+        } else {
+            storage[position] = resume;
         }
     }
 
@@ -71,7 +70,7 @@ public class ArrayStorage {
         return size;
     }
 
-     private int getResumePosition(String uuid) {
+     private int getPosition(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
