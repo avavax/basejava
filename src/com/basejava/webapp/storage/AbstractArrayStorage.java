@@ -41,7 +41,8 @@ public abstract class AbstractArrayStorage implements Storage {
         } else if (size == STORAGE_LIMIT) {
             System.out.println("Переполнение базы резюме");
         } else {
-            insertToArray(resume);
+            insertToArray(resume, position);
+            size++;
         }
     }
 
@@ -51,6 +52,8 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         } else {
             removeFromArray(position);
+            storage[size - 1] = null;
+            size--;
         }
     }
 
@@ -64,7 +67,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int getPosition(String uuid);
 
-    protected abstract void insertToArray(Resume resume);
+    protected abstract void insertToArray(Resume resume, int position);
 
     protected abstract void removeFromArray(int position);
 }
