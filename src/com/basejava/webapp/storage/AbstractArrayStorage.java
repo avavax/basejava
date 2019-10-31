@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.*;
 import com.basejava.webapp.model.Resume;
 import java.util.Arrays;
 
@@ -17,8 +18,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume get(String uuid) {
         int position = getPosition(uuid);
         if (position < 0) {
-            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
-            return null;
+            throw new NotExistStorageException(uuid);
+            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
+            //return null;
         }
         return storage[position];
     }
@@ -27,7 +29,8 @@ public abstract class AbstractArrayStorage implements Storage {
         String uuid = resume.getUuid();
         int position = getPosition(uuid);
         if (position < 0) {
-            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
+            throw new NotExistStorageException(uuid);
+            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         } else {
             storage[position] = resume;
         }
@@ -36,10 +39,12 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume resume) {
         String uuid = resume.getUuid();
         int position = getPosition(uuid);
-        if (position > 0) {
-            System.out.println("Резюме с uuid=" + uuid + " уже есть в базе");
+        if (position >= 0) {
+             throw new ExistStorageException(uuid);
+            //System.out.println("Резюме с uuid=" + uuid + " уже есть в базе");
         } else if (size == STORAGE_LIMIT) {
-            System.out.println("Переполнение базы резюме");
+            throw new StorageException("Storage overflow", uuid);
+            //System.out.println("Переполнение базы резюме");
         } else {
             insertToArray(resume, position);
             size++;
@@ -49,7 +54,8 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int position = getPosition(uuid);
         if (position < 0) {
-            System.out.println("Резюме с uuid=" + uuid + " нет в базе");
+            throw new NotExistStorageException(uuid);
+            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         } else {
             removeFromArray(position);
             storage[size - 1] = null;
