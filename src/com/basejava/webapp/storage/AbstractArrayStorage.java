@@ -19,8 +19,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int position = getPosition(uuid);
         if (position < 0) {
             throw new NotExistStorageException(uuid);
-            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
-            //return null;
         }
         return storage[position];
     }
@@ -30,7 +28,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int position = getPosition(uuid);
         if (position < 0) {
             throw new NotExistStorageException(uuid);
-            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         } else {
             storage[position] = resume;
         }
@@ -41,10 +38,8 @@ public abstract class AbstractArrayStorage implements Storage {
         int position = getPosition(uuid);
         if (position >= 0) {
              throw new ExistStorageException(uuid);
-            //System.out.println("Резюме с uuid=" + uuid + " уже есть в базе");
         } else if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", uuid);
-            //System.out.println("Переполнение базы резюме");
         } else {
             insertToArray(resume, position);
             size++;
@@ -55,7 +50,6 @@ public abstract class AbstractArrayStorage implements Storage {
         int position = getPosition(uuid);
         if (position < 0) {
             throw new NotExistStorageException(uuid);
-            //System.out.println("Резюме с uuid=" + uuid + " нет в базе");
         } else {
             removeFromArray(position);
             storage[size - 1] = null;
