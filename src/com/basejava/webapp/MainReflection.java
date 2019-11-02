@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MainReflection {
-    public static void main(String[] args) throws IllegalAccessException, InvocationTargetException {
+    public static void main(String[] args) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         Resume r = new Resume();
         Field field = r.getClass().getDeclaredFields()[0];
         field.setAccessible(true);
@@ -15,9 +15,9 @@ public class MainReflection {
         field.set(r, "new_uuid");
 
         // TODO : invoke r.toString via reflection
-        Method[] publicMethods = r.getClass().getMethods();
-        System.out.println(publicMethods[1].invoke(r));
-        //System.out.println(Arrays.toString(publicMethods));
+        Method publicMethod = r.getClass().getMethod("toString");
+        Object result = publicMethod.invoke(r);
+        System.out.println(result);
 
         System.out.println(r);
     }
