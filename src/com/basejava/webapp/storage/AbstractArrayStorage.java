@@ -17,34 +17,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateOnStorage(Resume resume) {
-        int position = getPosition(resume.getUuid());
-        storage[position] = resume;
-    }
-
-    @Override
-    public Resume getFromStorage(String uuid) {
-        return storage[getPosition(uuid)];
-    }
-
-    @Override
-    public void insertToStorage(Resume resume) {
-        if (size == STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", resume.getUuid());
-        }
-        int position = getPosition(resume.getUuid());
-        insertToArray(resume, position);
-        size++;
-    }
-
-    @Override
-    protected void removeFromStorage(String uuid) {
-        removeFromArray(getPosition(uuid));
-        storage[size - 1] = null;
-        size--;
-    }
-
-    @Override
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
@@ -55,11 +27,37 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Resume resume) {
-        return getPosition(resume.getUuid()) >= 0;
+    protected void updateOnStorage(Resume resume, Object position) {
+        storage[(Integer) position] = resume;
     }
 
-    protected abstract int getPosition(String uuid);
+    @Override
+    public Resume getFromStorage(Object position) {
+        return storage[(Integer) position];
+    }
+
+    @Override
+    public void insertToStorage(Resume resume, Object position) {
+        if (size == STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", resume.getUuid());
+        }
+        insertToArray(resume, (Integer) position);
+        size++;
+    }
+
+    @Override
+    protected void removeFromStorage(Object position) {
+        removeFromArray((Integer) position);
+        storage[size - 1] = null;
+        size--;
+    }
+
+    @Override
+    protected boolean isExist(Object position) {
+        return (Integer) position >= 0;
+    }
+
+    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void insertToArray(Resume resume, int position);
 

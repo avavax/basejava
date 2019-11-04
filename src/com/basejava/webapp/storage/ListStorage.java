@@ -3,73 +3,60 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.List;
+
 
 public class ListStorage extends AbstractStorage {
 
-    protected static Collection<Resume> collection = new ArrayList<>();
+    protected List<Resume> list = new ArrayList<>();
 
     @Override
     public void clear() {
-        collection.clear();
+        list.clear();
     }
 
     @Override
     public Resume[] getAll() {
-        return collection.toArray(new Resume[0]);
+        return list.toArray(new Resume[list.size()]);
     }
 
     @Override
     public int size() {
-        return collection.size();
+        return list.size();
     }
 
     @Override
-    protected boolean isExist(Resume resume) {
-        return collection.contains(resume);
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
     }
 
     @Override
-    protected void insertToStorage(Resume resume) {
-        collection.add(resume);
-    }
-
-    @Override
-    protected Resume getFromStorage(String uuid) {
-        Iterator<Resume> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            Resume resume = iterator.next();
-            if (Objects.equals(resume.getUuid(), uuid)) {
-                return resume;
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
         return null;
     }
 
     @Override
-    protected void removeFromStorage(String uuid) {
-        Iterator<Resume> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            Resume resume = iterator.next();
-            if (Objects.equals(resume.getUuid(), uuid)) {
-                iterator.remove();
-                break;
-            }
-        }
+    protected void insertToStorage(Resume resume, Object searchKey) {
+        list.add(resume);
     }
 
     @Override
-    protected void updateOnStorage(Resume resume) {
-        Iterator<Resume> iterator = collection.iterator();
-        while (iterator.hasNext()) {
-            Resume keySearch = iterator.next();
-            if (Objects.equals(keySearch, resume)) {
-                iterator.remove();
-                collection.add(resume);
-                break;
-            }
-        }
+    protected Resume getFromStorage(Object searchKey) {
+        return list.get((Integer) searchKey);
+    }
+
+    @Override
+    protected void removeFromStorage(Object searchKey) {
+        list.remove(((Integer) searchKey).intValue());
+    }
+
+    @Override
+    protected void updateOnStorage(Resume resume, Object searchKey) {
+        list.set((Integer) searchKey, resume);
     }
 }
