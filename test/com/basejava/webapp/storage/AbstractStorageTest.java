@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
@@ -16,10 +15,14 @@ public abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final String NAME_1 = "John Dow";
+    private static final String NAME_2 = "Ann Smith";
+    private static final String NAME_3 = "John Dow";
+    private static final String NAME_4 = "Steve Balmer";
+    private static final Resume RESUME_1 = new Resume(UUID_1, NAME_1);
+    private static final Resume RESUME_2 = new Resume(UUID_2, NAME_2);
+    private static final Resume RESUME_3 = new Resume(UUID_3, NAME_3);
+    private static final Resume RESUME_4 = new Resume(UUID_4, NAME_4);
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -37,8 +40,8 @@ public abstract class AbstractStorageTest {
     public void clear() throws Exception {
         storage.clear();
         Assert.assertEquals(0, storage.size());
-        Resume[] resumes = storage.getAll();
-        Assert.assertEquals(0, resumes.length);
+        List<Resume> resumes = storage.getAllSorted();
+        Assert.assertEquals(0, resumes.size());
     }
 
     @Test
@@ -88,12 +91,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAll() throws Exception {
-        Resume[] resumes = storage.getAll();
-        List<Resume> list = Arrays.asList(resumes);
-        Assert.assertEquals(true, list.contains(RESUME_1));
-        Assert.assertEquals(true, list.contains(RESUME_2));
-        Assert.assertEquals(true, list.contains(RESUME_3));
-        Assert.assertEquals(3, resumes.length);
+        List<Resume> resumes = storage.getAllSorted();
+        //List<Resume> list = Arrays.asList(resumes);
+        Assert.assertEquals(true, resumes.contains(RESUME_1));
+        Assert.assertEquals(true, resumes.contains(RESUME_2));
+        Assert.assertEquals(true, resumes.contains(RESUME_3));
+        Assert.assertEquals(3, resumes.size());
     }
 
     @Test
