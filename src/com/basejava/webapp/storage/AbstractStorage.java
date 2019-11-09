@@ -5,15 +5,19 @@ import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 
 import java.util.Comparator;
+import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected static final Comparator<Resume> FULLNAME_COMPARATOR = (o1, o2) -> {
-        if (o1.getFullName().equals(o2.getFullName())) {
-            return o1.getUuid().compareTo(o2.getUuid());
-        }
-        return o1.getFullName().compareTo(o2.getFullName());
-    };
+    protected static final Comparator<Resume> FULLNAME_COMPARATOR =
+            Comparator.comparing(Resume::getFullName)
+            .thenComparing(Resume::getUuid);
+
+    public List<Resume> getAllSorted() {
+        List<Resume> list = getListStorage();
+        list.sort(FULLNAME_COMPARATOR);
+        return list;
+    }
 
     public void save(Resume resume) {
         Object searchKey = getNotExistedSearchKey(resume.getUuid());
@@ -50,6 +54,8 @@ public abstract class AbstractStorage implements Storage {
         }
         return searchKey;
     }
+
+    protected abstract List getListStorage();
 
     protected abstract Object getSearchKey(String uuid);
 

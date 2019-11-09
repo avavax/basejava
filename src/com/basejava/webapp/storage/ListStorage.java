@@ -3,7 +3,6 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -14,12 +13,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         list.clear();
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        list.sort(FULLNAME_COMPARATOR);
-        return list;
     }
 
     @Override
@@ -60,5 +53,10 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected void updateOnStorage(Resume resume, Object searchKey) {
         list.set((Integer) searchKey, resume);
+    }
+
+    @Override
+    protected List getListStorage() {
+        return list;
     }
 }

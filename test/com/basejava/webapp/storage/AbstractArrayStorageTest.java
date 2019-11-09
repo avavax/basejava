@@ -16,12 +16,12 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     public void saveOverflow() throws Exception {
         try {
             for (int i = storage.size(); i < STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
+                storage.save(new Resume("John Dow"));
             }
         } catch (Exception e) {
             fail ("Base overflow: " + e);
         }
-        storage.save(new Resume());
+        storage.save(new Resume("John Dow"));
     }
 
 }

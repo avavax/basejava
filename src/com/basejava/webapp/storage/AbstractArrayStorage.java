@@ -18,13 +18,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> list = Arrays.asList(Arrays.copyOf(storage, size));
-        list.sort(FULLNAME_COMPARATOR);
-        return list;
-    }
-
-    @Override
     public int size() {
         return size;
     }
@@ -58,6 +51,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected boolean isExist(Object position) {
         return (Integer) position >= 0;
+    }
+
+    @Override
+    protected List getListStorage() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     @Override
