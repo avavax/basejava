@@ -7,14 +7,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class MapStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage {
 
     protected Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected String getSearchKey(String uuid) {
-        return uuid;
+    protected Resume getSearchKey(String uuid) {
+        return map.get(uuid);
+    }
+
+    @Override
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
+    }
+
+    @Override
+    protected void insertToStorage(Resume resume, Object searchKey) {
+        map.put(resume.toString(), resume);
+    }
+
+    @Override
+    protected void updateOnStorage(Resume resume, Object searchKey) {
+        map.put(resume.toString(), resume);
+    }
+
+    @Override
+    protected void removeFromStorage(Object searchKey) {
+        map.remove(searchKey.toString());
+    }
+
+    @Override
+    protected Resume getFromStorage(Object searchKey) {
+        return (Resume) searchKey;
     }
 
     @Override
@@ -23,37 +47,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public int size() {
-        return map.size();
-    }
-
-    @Override
-    protected boolean isExist(Object searchKey) {
-        return map.containsKey((String) searchKey);
-    }
-
-    @Override
-    protected void insertToStorage(Resume resume, Object searchKey) {
-        map.put((String) searchKey, resume);
-    }
-
-    @Override
-    protected void updateOnStorage(Resume resume, Object searchKey) {
-        map.put((String) searchKey, resume);
-    }
-
-    @Override
-    protected void removeFromStorage(Object searchKey) {
-        map.remove((String) searchKey);
-    }
-
-    @Override
-    protected Resume getFromStorage(Object searchKey) {
-        return map.get((String) searchKey);
-    }
-
-    @Override
     protected List<Resume> getListStorage() {
         return new ArrayList<>(map.values());
+    }
+
+    @Override
+    public int size() {
+        return map.size();
     }
 }

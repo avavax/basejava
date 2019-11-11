@@ -55,7 +55,7 @@ public abstract class AbstractStorage implements Storage {
         return searchKey;
     }
 
-    protected abstract List getListStorage();
+    protected abstract List<Resume> getListStorage();
 
     protected abstract Object getSearchKey(String uuid);
 
