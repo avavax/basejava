@@ -3,11 +3,10 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     protected static final int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -25,34 +24,34 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateOnStorage(Resume resume, Object position) {
-        storage[(Integer) position] = resume;
+    protected void updateOnStorage(Resume resume, Integer position) {
+        storage[position] = resume;
     }
 
     @Override
-    public Resume getFromStorage(Object position) {
-        return storage[(Integer) position];
+    public Resume getFromStorage(Integer position) {
+        return storage[position];
     }
 
     @Override
-    public void insertToStorage(Resume resume, Object position) {
+    public void insertToStorage(Resume resume, Integer position) {
         if (size == STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        insertToArray(resume, (Integer) position);
+        insertToArray(resume, position);
         size++;
     }
 
     @Override
-    protected void removeFromStorage(Object position) {
-        removeFromArray((Integer) position);
+    protected void removeFromStorage(Integer position) {
+        removeFromArray(position);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected boolean isExist(Object position) {
-        return (Integer) position >= 0;
+    protected boolean isExist(Integer position) {
+        return position >= 0;
     }
 
     @Override

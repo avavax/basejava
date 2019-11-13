@@ -1,0 +1,47 @@
+@startuml
+class Resume {
+    String uuid
+    String fullName
+    Map <ContactType, String> contacts
+    Map <SectionType, Section> sections
+}
+
+enum SectionType {
+}
+
+enum ContactType {
+}
+
+Resume *-- Section
+Resume *-- SectionType
+Resume *-- ContactType
+
+class Section {
+    String description
+    ArrayList <ListItem>
+}
+
+class SimpleSection extends Section {
+    String description
+    ArrayList <ListItem> = null;
+}
+
+class ListSection extends Section {
+    String description = null
+    ArrayList <ListItem>;
+}
+
+class ListItem {
+    String title
+    String link
+    String dataTime
+    String subtitle
+    String description
+    --
+    Для секций "достижения" и "квалификация"
+    все поля кроме description null
+}
+
+ListSection *-- ListItem
+
+@enduml

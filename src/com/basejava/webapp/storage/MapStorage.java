@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage extends AbstractStorage<String> {
 
     protected Map<String, Resume> map = new HashMap<>();
 
@@ -28,28 +28,28 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object searchKey) {
-        return map.containsKey((String) searchKey);
+    protected boolean isExist(String searchKey) {
+        return map.containsKey(searchKey);
     }
 
     @Override
-    protected void insertToStorage(Resume resume, Object searchKey) {
-        map.put((String) searchKey, resume);
+    protected void insertToStorage(Resume resume, String searchKey) {
+        map.put(searchKey, resume);
     }
 
     @Override
-    protected void updateOnStorage(Resume resume, Object searchKey) {
-        map.put((String) searchKey, resume);
+    protected void updateOnStorage(Resume resume, String searchKey) {
+        map.put(searchKey, resume);
     }
 
     @Override
-    protected void removeFromStorage(Object searchKey) {
-        map.remove((String) searchKey);
+    protected void removeFromStorage(String searchKey) {
+        map.remove(searchKey);
     }
 
     @Override
-    protected Resume getFromStorage(Object searchKey) {
-        return map.get((String) searchKey);
+    protected Resume getFromStorage(String searchKey) {
+        return map.get(searchKey);
     }
 
     @Override
