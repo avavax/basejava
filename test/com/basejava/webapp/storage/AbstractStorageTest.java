@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
@@ -48,7 +49,7 @@ public abstract class AbstractStorageTest {
     }
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() throws Exception {
-        storage.get("dummy");
+        storage.get(UUID_4);
     }
 
     @Test
@@ -74,10 +75,11 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = NotExistStorageException.class)
+    @Test
     public void delete() throws Exception {
         storage.delete(UUID_1);
-        storage.get(UUID_1);
+        Assert.assertEquals(2, storage.size());
+        //storage.get(UUID_1);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -88,7 +90,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() throws Exception {
         List<Resume> resumes = storage.getAllSorted();
-        Assert.assertArrayEquals(new Resume[] {RESUME_2, RESUME_1, RESUME_3}, resumes.toArray());
+        Assert.assertEquals(3, resumes.size());
+        Assert.assertEquals(Arrays.asList(RESUME_2, RESUME_1, RESUME_3), resumes);
     }
 
     @Test

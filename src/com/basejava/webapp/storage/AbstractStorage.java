@@ -23,25 +23,25 @@ public abstract class AbstractStorage <SK> implements Storage {
     }
 
     public void save(Resume resume) {
-        LOG.info("Save " + resume);
+        //LOG.info("Save " + resume);
         SK searchKey = getNotExistedSearchKey(resume.getUuid());
         insertToStorage(resume, searchKey);
     }
 
     public Resume get(String uuid) {
-        LOG.info("Get " + uuid);
+        //LOG.info("Get " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
         return getFromStorage(searchKey);
     }
 
     public void delete(String uuid) {
-        LOG.info("Delete " + uuid);
+        //LOG.info("Delete " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
         removeFromStorage(searchKey);
     }
 
     public void update(Resume resume) {
-        LOG.info("Update " + resume);
+        //LOG.info("Update " + resume);
         SK searchKey = getExistedSearchKey(resume.getUuid());
         updateOnStorage(resume, searchKey);
     }
@@ -49,7 +49,7 @@ public abstract class AbstractStorage <SK> implements Storage {
     private SK getExistedSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
-            LOG.warning("Resume " + uuid + " not exist");
+            //LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
@@ -58,7 +58,7 @@ public abstract class AbstractStorage <SK> implements Storage {
     private SK getNotExistedSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
-            LOG.warning("Resume " + uuid + " already exist");
+            //LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return searchKey;

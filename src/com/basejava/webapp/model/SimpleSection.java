@@ -2,14 +2,14 @@ package com.basejava.webapp.model;
 
 import java.util.ArrayList;
 
-public class SimpleSection extends Section {
+public class SimpleSection extends AbstractSection<String> {
 
     public SimpleSection(String description) {
         super(description);
     }
 
     @Override
-    public ArrayList<ListItem> getList() {
+    public ArrayList<String> getList() {
         return null;
     }
 

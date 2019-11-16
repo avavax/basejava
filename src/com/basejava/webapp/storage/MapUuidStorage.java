@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MapStorage extends AbstractStorage<String> {
+public class MapUuidStorage extends AbstractStorage<String> {
 
     protected Map<String, Resume> map = new HashMap<>();
 

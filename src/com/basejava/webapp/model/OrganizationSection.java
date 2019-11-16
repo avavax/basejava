@@ -2,20 +2,19 @@ package com.basejava.webapp.model;
 
 import java.util.ArrayList;
 
-public class ListSection extends AbstractSection<String> {
+public class OrganizationSection extends AbstractSection<Organization> {
+    private ArrayList<Organization> list = new ArrayList<>();
 
-    private ArrayList<String> list = new ArrayList<>();
-
-    public ListSection() {
+    public OrganizationSection() {
         super(null);
     }
 
-    public void setList(ArrayList<String> list) {
+    public void setList(ArrayList<Organization> list) {
         this.list = list;
     }
 
     @Override
-    public ArrayList<String> getList() {
+    public ArrayList<Organization> getList() {
         return list;
     }
 
@@ -25,7 +24,7 @@ public class ListSection extends AbstractSection<String> {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        ListSection that = (ListSection) o;
+        OrganizationSection that = (OrganizationSection) o;
 
         return list.equals(that.list);
     }
