@@ -1,16 +1,18 @@
 package com.basejava.webapp.model;
 
-import java.util.ArrayList;
+public class SimpleSection extends AbstractSection {
+    private String description;
 
-public class SimpleSection extends AbstractSection<String> {
+    public String getDescription() {
+        return description;
+    }
 
-    public SimpleSection(String description) {
-        super(description);
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
-    public ArrayList<String> getList() {
-        return null;
+    public String toString() {
+        return description;
     }
-
 }

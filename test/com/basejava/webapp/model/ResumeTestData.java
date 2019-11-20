@@ -23,9 +23,11 @@ public class ResumeTestData {
         // Раздел Секции
         Map<SectionType, AbstractSection> sections = new HashMap<>();
 
-        SimpleSection objective = new SimpleSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        SimpleSection objective = new SimpleSection();
+        objective.setDescription("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sections.put(SectionType.OBJECTIVE, objective);
-        SimpleSection personal = new SimpleSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        SimpleSection personal = new SimpleSection();
+        personal.setDescription("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         sections.put(SectionType.PERSONAL, personal);
 
         ListSection achivement = new ListSection();
@@ -107,46 +109,24 @@ public class ResumeTestData {
 
         resume.setSections(sections);
 
-        contactRender();
+        contactDisplay();
 
-        sectionRender();
+        sectionDisplay();
     }
 
-    private static void contactRender() {
+    private static void contactDisplay() {
         for (ContactType contact: ContactType.values()) {
             System.out.println(contact.getTitle() + " : " + resume.getContact(contact));
         }
         System.out.println("");
     }
 
-    private static void sectionRender() {
+    private static void sectionDisplay() {
 
         for (SectionType sectionName: SectionType.values()) {
             AbstractSection currentSection = resume.getSection(sectionName);
             System.out.println(sectionName.getTitle());
-
-            if (currentSection instanceof SimpleSection) {
-                System.out.println(currentSection.getDescription());
-            }
-
-            if (currentSection instanceof ListSection) {
-                ArrayList<String> sectionList = currentSection.getList();
-                for (String item : sectionList) {
-                    System.out.println(item);
-                }
-            }
-
-            if (currentSection instanceof OrganizationSection) {
-                ArrayList<Organization> sectionList = currentSection.getList();
-                for (Organization item : sectionList) {
-                    System.out.println(item.getTitle() + " " + item.getLink());
-                    System.out.println(item.getStart() + " " + item.getFinish());
-                    System.out.println(item.getSubtitle());
-                    System.out.println(item.getDescription());
-                    System.out.println("");
-                }
-            }
-
+            System.out.println(currentSection.toString());
             System.out.println("");
         }
     }

@@ -2,21 +2,25 @@ package com.basejava.webapp.model;
 
 import java.util.ArrayList;
 
-public class ListSection extends AbstractSection<String> {
+public class ListSection extends AbstractSection {
 
     private ArrayList<String> list = new ArrayList<>();
-
-    public ListSection() {
-        super(null);
-    }
 
     public void setList(ArrayList<String> list) {
         this.list = list;
     }
 
-    @Override
     public ArrayList<String> getList() {
         return list;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (String item : list) {
+            result.append(item + "\n");
+        }
+        return result.toString();
     }
 
     @Override

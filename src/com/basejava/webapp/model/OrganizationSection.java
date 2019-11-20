@@ -2,20 +2,24 @@ package com.basejava.webapp.model;
 
 import java.util.ArrayList;
 
-public class OrganizationSection extends AbstractSection<Organization> {
+public class OrganizationSection extends AbstractSection {
     private ArrayList<Organization> list = new ArrayList<>();
-
-    public OrganizationSection() {
-        super(null);
-    }
 
     public void setList(ArrayList<Organization> list) {
         this.list = list;
     }
 
-    @Override
     public ArrayList<Organization> getList() {
         return list;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (Organization item : list) {
+            result.append(item.toString() + "\n");
+        }
+        return result.toString();
     }
 
     @Override

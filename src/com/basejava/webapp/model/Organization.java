@@ -73,6 +73,11 @@ public class Organization {
     }
 
     @Override
+    public String toString() {
+        return title + " (" + link + ") "  + "\n" + start + " - " + finish + "\n" + subtitle + "\n" + description;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
