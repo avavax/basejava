@@ -9,6 +9,12 @@ public class ResumeTestData {
     private static Resume resume = new Resume(UUID_1, "Григорий Кислин");
 
     public static void main(String[] args) {
+        fillResume(resume);
+        contactDisplay(resume);
+        sectionDisplay(resume);
+    }
+
+    public static void fillResume(Resume resume) {
         // Раздел Контакты
         Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
@@ -86,12 +92,19 @@ public class ResumeTestData {
                 YearMonth.of(1987, 6),
                 "Закончил с отличием",
                 null));
+
+        ArrayList<Position> positions = new ArrayList<>();
+        positions.add(new Position(
+                YearMonth.of(1987, 9),
+                YearMonth.of(1993, 9),
+                "Инженер (программист Fortran, C)"));
+        positions.add(new Position(
+                YearMonth.of(1993, 9),
+                YearMonth.of(1996, 7),
+                "Аспирантура (программист С, С++)"));
         educationList.add(new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
                 "http://www.ifmo.ru/",
-                YearMonth.of(1987, 9),
-                YearMonth.of(1996, 7),
-                "Аспирантура (программист С, С++), Инженер (программист Fortran, C)",
-                null));
+                positions));
         educationList.add(new Organization("Alcatel",
                 "http://www.alcatel.ru/",
                 YearMonth.of(1997, 9),
@@ -102,20 +115,16 @@ public class ResumeTestData {
         sections.put(SectionType.EDUCATION, education);
 
         resume.setSections(sections);
-
-        contactDisplay();
-
-        sectionDisplay();
     }
 
-    private static void contactDisplay() {
+    public static void contactDisplay(Resume resume) {
         for (ContactType contact: ContactType.values()) {
             System.out.println(contact.getTitle() + " : " + resume.getContact(contact));
         }
         System.out.println("");
     }
 
-    private static void sectionDisplay() {
+    public static void sectionDisplay(Resume resume) {
 
         for (SectionType sectionName: SectionType.values()) {
             Section currentSection = resume.getSection(sectionName);
