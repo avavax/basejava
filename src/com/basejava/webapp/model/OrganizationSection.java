@@ -1,9 +1,15 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class OrganizationSection extends AbstractSection {
+public class OrganizationSection extends Section {
     private ArrayList<Organization> list = new ArrayList<>();
+
+    public OrganizationSection(ArrayList<Organization> list) {
+        Objects.requireNonNull(list, "Organizations must not be null");
+        this.list = list;
+    }
 
     public void setList(ArrayList<Organization> list) {
         this.list = list;
@@ -26,7 +32,6 @@ public class OrganizationSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         OrganizationSection that = (OrganizationSection) o;
 
@@ -35,8 +40,6 @@ public class OrganizationSection extends AbstractSection {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + list.hashCode();
-        return result;
+        return list.hashCode();
     }
 }

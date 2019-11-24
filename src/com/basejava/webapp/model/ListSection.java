@@ -1,10 +1,16 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class ListSection extends AbstractSection {
+public class ListSection extends Section {
 
     private ArrayList<String> list = new ArrayList<>();
+
+    public ListSection(ArrayList<String> list) {
+        Objects.requireNonNull(list, "List must not be null");
+        this.list = list;
+    }
 
     public void setList(ArrayList<String> list) {
         this.list = list;
@@ -27,7 +33,6 @@ public class ListSection extends AbstractSection {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         ListSection that = (ListSection) o;
 
@@ -36,8 +41,6 @@ public class ListSection extends AbstractSection {
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + list.hashCode();
-        return result;
+        return list.hashCode();
     }
 }

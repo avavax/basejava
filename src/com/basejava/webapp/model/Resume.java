@@ -1,9 +1,6 @@
 package com.basejava.webapp.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -12,8 +9,8 @@ public class Resume {
 
     private final String uuid;
     private String fullName;
-    private Map<ContactType, String> contacts = new HashMap<>();
-    private Map<SectionType, AbstractSection> sections = new HashMap<>();
+    private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -50,15 +47,15 @@ public class Resume {
         this.contacts = contacts;
     }
 
-    public Map<SectionType, AbstractSection> getSections() {
+    public Map<SectionType, Section> getSections() {
         return sections;
     }
 
-    public AbstractSection getSection(SectionType sectionName) {
+    public Section getSection(SectionType sectionName) {
         return sections.get(sectionName);
     }
 
-    public void setSections(Map<SectionType, AbstractSection> sections) {
+    public void setSections(Map<SectionType, Section> sections) {
         this.sections = sections;
     }
 

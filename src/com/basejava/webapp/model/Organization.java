@@ -1,24 +1,26 @@
 package com.basejava.webapp.model;
 
 import java.time.YearMonth;
+import java.util.Objects;
 
 public class Organization {
+    private Link link;
     private String title;
-    private String subtitle;
-    private String link;
     private YearMonth start;
     private YearMonth finish;
     private String description;
 
-    public Organization(String title,
-                        String subtitle,
-                        String link,
+    public Organization(String name,
+                        String url,
                         YearMonth start,
                         YearMonth finish,
+                        String title,
                         String description) {
+        Objects.requireNonNull(start, "startDate must not be null");
+        Objects.requireNonNull(finish, "endDate must not be null");
+        Objects.requireNonNull(title, "title must not be null");
         this.title = title;
-        this.subtitle = subtitle;
-        this.link = link;
+        this.link = new Link(name, url);
         this.start = start;
         this.finish = finish;
         this.description = description;
@@ -32,19 +34,11 @@ public class Organization {
         this.title = title;
     }
 
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getLink() {
+    public Link getLink() {
         return link;
     }
 
-    public void setLink(String link) {
+    public void setLink(Link link) {
         this.link = link;
     }
 
@@ -74,7 +68,7 @@ public class Organization {
 
     @Override
     public String toString() {
-        return title + " (" + link + ") "  + "\n" + start + " - " + finish + "\n" + subtitle + "\n" + description;
+        return link.toString()  + "\n" + start + " - " + finish + "\n" + title + "\n" + description;
     }
 
     @Override
@@ -84,21 +78,19 @@ public class Organization {
 
         Organization that = (Organization) o;
 
+        if (!link.equals(that.link)) return false;
         if (!title.equals(that.title)) return false;
-        if (subtitle != null ? !subtitle.equals(that.subtitle) : that.subtitle != null) return false;
-        if (link != null ? !link.equals(that.link) : that.link != null) return false;
-        if (start != null ? !start.equals(that.start) : that.start != null) return false;
-        if (finish != null ? !finish.equals(that.finish) : that.finish != null) return false;
+        if (!start.equals(that.start)) return false;
+        if (!finish.equals(that.finish)) return false;
         return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
-        result = 31 * result + (subtitle != null ? subtitle.hashCode() : 0);
-        result = 31 * result + (link != null ? link.hashCode() : 0);
-        result = 31 * result + (start != null ? start.hashCode() : 0);
-        result = 31 * result + (finish != null ? finish.hashCode() : 0);
+        int result = link.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + start.hashCode();
+        result = 31 * result + finish.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }

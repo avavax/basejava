@@ -1,7 +1,7 @@
 package com.basejava.webapp.model;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -10,7 +10,7 @@ public class ResumeTestData {
 
     public static void main(String[] args) {
         // Раздел Контакты
-        Map<ContactType, String> contacts = new HashMap<>();
+        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
         contacts.put(ContactType.SKYPE, "grigory.kislin");
         contacts.put(ContactType.EMAIL, "gkislin@yandex.ru");
@@ -21,16 +21,13 @@ public class ResumeTestData {
         resume.setContacts(contacts);
 
         // Раздел Секции
-        Map<SectionType, AbstractSection> sections = new HashMap<>();
+        Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
-        SimpleSection objective = new SimpleSection();
-        objective.setDescription("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
+        SimpleSection objective = new SimpleSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sections.put(SectionType.OBJECTIVE, objective);
-        SimpleSection personal = new SimpleSection();
-        personal.setDescription("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
+        SimpleSection personal = new SimpleSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры.");
         sections.put(SectionType.PERSONAL, personal);
 
-        ListSection achivement = new ListSection();
         ArrayList<String> achivementList = new ArrayList<>();
         achivementList.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
         achivementList.add("Создание JavaEE фреймворка для отказоустойчивого взаимодействия слабо-связанных сервисов (SOA-base архитектура, JAX-WS, JMS, AS Glassfish). Сбор статистики сервисов и информации о состоянии через систему мониторинга Nagios. Реализация онлайн клиента для администрирования и мониторинга системы по JMX (Jython/ Django).");
@@ -38,10 +35,9 @@ public class ResumeTestData {
         achivementList.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера.");
         achivementList.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
         achivementList.add("С 2013 года: разработка проектов \"Разработка Web приложения\",\"Java Enterprise\", \"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
-        achivement.setList(achivementList);
+        ListSection achivement = new ListSection(achivementList);
         sections.put(SectionType.ACHIEVEMENT, achivement);
 
-        ListSection qualification = new ListSection();
         ArrayList<String> qualificationList = new ArrayList<>();
         qualificationList.add("Родной русский, английский \"upper intermediate\"");
         qualificationList.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, архитектурных шаблонов, UML, функционального программирования");
@@ -58,53 +54,51 @@ public class ResumeTestData {
         qualificationList.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,");
         qualificationList.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         qualificationList.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        qualification.setList(qualificationList);
+        ListSection qualification = new ListSection(qualificationList);
         sections.put(SectionType.QUALIFICATIONS, qualification);
 
-        OrganizationSection experience = new OrganizationSection();
         ArrayList<Organization> experienceList = new ArrayList<>();
         experienceList.add(new Organization("Alcatel",
-                "Инженер по аппаратному и программному тестированию",
                 "http://www.alcatel.ru/",
                 YearMonth.of(1997, 9),
                 YearMonth.of(2005, 1),
+                "Инженер по аппаратному и программному тестированию",
                 "Тестирование, отладка, внедрение ПО цифровой телефонной станции Alcatel 1000 S12 (CHILL, ASM)."));
         experienceList.add(new Organization("Siemens AG",
-                "Разработчик ПО",
                 "https://www.siemens.com/ru/ru/home.html",
                 YearMonth.of(2005, 1),
                 YearMonth.of(2007, 2),
+                "Разработчик ПО",
                 "Разработка информационной модели, проектирование интерфейсов, реализация и отладка ПО на мобильной IN платформе Siemens @vantage (Java, Unix)."));
         experienceList.add(new Organization("Enkata",
-                "Разработчик ПО",
                 "http://enkata.com/",
                 YearMonth.of(2007, 3),
                 YearMonth.of(2008, 6),
+                "Разработчик ПО",
                 "Реализация клиентской (Eclipse RCP) и серверной (JBoss 4.2, Hibernate 3.0, Tomcat, JMS) частей кластерного J2EE приложения (OLAP, Data mining)."));
-        experience.setList(experienceList);
+        OrganizationSection experience = new OrganizationSection(experienceList);
         sections.put(SectionType.EXPERIENCE, experience);
 
-        OrganizationSection education = new OrganizationSection();
         ArrayList<Organization> educationList = new ArrayList<>();
         educationList.add(new Organization("Заочная физико-техническая школа при МФТИ",
-                "Закончил с отличием",
                 "http://www.school.mipt.ru/",
                 YearMonth.of(1984, 9),
                 YearMonth.of(1987, 6),
+                "Закончил с отличием",
                 null));
         educationList.add(new Organization("Санкт-Петербургский национальный исследовательский университет информационных технологий, механики и оптики",
-                "Аспирантура (программист С, С++), Инженер (программист Fortran, C)",
                 "http://www.ifmo.ru/",
                 YearMonth.of(1987, 9),
                 YearMonth.of(1996, 7),
+                "Аспирантура (программист С, С++), Инженер (программист Fortran, C)",
                 null));
         educationList.add(new Organization("Alcatel",
-                "6 месяцев обучения цифровым телефонным сетям (Москва)",
                 "http://www.alcatel.ru/",
                 YearMonth.of(1997, 9),
                 YearMonth.of(1998, 3),
+                "6 месяцев обучения цифровым телефонным сетям (Москва)",
                 null));
-        education.setList(educationList);
+        OrganizationSection education = new OrganizationSection(educationList);
         sections.put(SectionType.EDUCATION, education);
 
         resume.setSections(sections);
@@ -124,7 +118,7 @@ public class ResumeTestData {
     private static void sectionDisplay() {
 
         for (SectionType sectionName: SectionType.values()) {
-            AbstractSection currentSection = resume.getSection(sectionName);
+            Section currentSection = resume.getSection(sectionName);
             System.out.println(sectionName.getTitle());
             System.out.println(currentSection.toString());
             System.out.println("");
