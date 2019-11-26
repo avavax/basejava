@@ -2,7 +2,7 @@ package com.basejava.webapp.model;
 
 import java.util.Objects;
 
-public class SimpleSection extends Section {
+public class SimpleSection extends AbstractSection {
     private String description;
 
     public SimpleSection(String description) {

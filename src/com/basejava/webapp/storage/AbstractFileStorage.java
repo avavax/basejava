@@ -27,11 +27,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getListStorage() {
         List<Resume> listResumes = new ArrayList<>();
         File[] listFiles = directory.listFiles();
-        for (File f : listFiles) {
-            try {
-                listResumes.add(doRead(f));
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (listFiles != null) {
+            for (File f : listFiles) {
+                try {
+                    listResumes.add(doRead(f));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return listResumes;
@@ -83,15 +85,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] listFiles = directory.listFiles();
-        for (File file : listFiles) {
-            file.delete();
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                file.delete();
+            }
         }
+
     }
 
     @Override
     public int size() {
         File[] listFiles = directory.listFiles();
-        return listFiles.length;
+        return listFiles != null ? listFiles.length : 0;
     }
 
     protected abstract void doWrite(Resume r, File file) throws IOException;

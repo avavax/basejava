@@ -3,8 +3,8 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class OrganizationSection extends Section {
-    private ArrayList<Organization> list = new ArrayList<>();
+public class OrganizationSection extends AbstractSection {
+    private ArrayList<Organization> list;
 
     public OrganizationSection(ArrayList<Organization> list) {
         Objects.requireNonNull(list, "Organizations must not be null");

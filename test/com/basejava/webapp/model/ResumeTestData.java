@@ -5,16 +5,18 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class ResumeTestData {
-    private static final String UUID_1 = "uuid1";
-    private static Resume resume = new Resume(UUID_1, "Григорий Кислин");
+    private static final String UUID = "uuid1";
+    private static final String FULL_NAME = "Григорий Кислин";
 
     public static void main(String[] args) {
-        fillResume(resume);
+        Resume resume = fillResume(UUID, FULL_NAME);
         contactDisplay(resume);
         sectionDisplay(resume);
     }
 
-    public static void fillResume(Resume resume) {
+    public static Resume fillResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+
         // Раздел Контакты
         Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
@@ -27,7 +29,7 @@ public class ResumeTestData {
         resume.setContacts(contacts);
 
         // Раздел Секции
-        Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+        Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
         SimpleSection objective = new SimpleSection("Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям");
         sections.put(SectionType.OBJECTIVE, objective);
@@ -115,6 +117,7 @@ public class ResumeTestData {
         sections.put(SectionType.EDUCATION, education);
 
         resume.setSections(sections);
+        return resume;
     }
 
     public static void contactDisplay(Resume resume) {
@@ -127,7 +130,7 @@ public class ResumeTestData {
     public static void sectionDisplay(Resume resume) {
 
         for (SectionType sectionName: SectionType.values()) {
-            Section currentSection = resume.getSection(sectionName);
+            AbstractSection currentSection = resume.getSection(sectionName);
             System.out.println(sectionName.getTitle());
             System.out.println(currentSection.toString());
             System.out.println("");

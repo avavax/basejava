@@ -3,9 +3,9 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class ListSection extends Section {
+public class ListSection extends AbstractSection {
 
-    private ArrayList<String> list = new ArrayList<>();
+    private ArrayList<String> list;
 
     public ListSection(ArrayList<String> list) {
         Objects.requireNonNull(list, "List must not be null");
