@@ -3,7 +3,7 @@ class Resume {
     String uuid
     String fullName
     Map <ContactType, String> contacts
-    Map <SectionType, Section> sections
+    Map <SectionType, AbstractSection> sections
 }
 
 enum SectionType {
@@ -12,36 +12,45 @@ enum SectionType {
 enum ContactType {
 }
 
-Resume *-- Section
+Resume *-- AbstractSection
 Resume *-- SectionType
 Resume *-- ContactType
 
-class Section {
+abstract class AbstractSection {
+}
+
+class SimpleSection extends AbstractSection {
     String description
-    ArrayList <ListItem>
 }
 
-class SimpleSection extends Section {
-    String description
-    ArrayList <ListItem> = null;
+class ListSection extends AbstractSection {
+     ArrayList <String> list
 }
 
-class ListSection extends Section {
-    String description = null
-    ArrayList <ListItem>;
+class OrganizationSection extends AbstractSection {
+    ArrayList <Orgaization> list
 }
 
-class ListItem {
+class Organization {
+    Link link
+    ArrayList <Position> positions
+}
+
+OrganizationSection *-- Organization
+
+class Link {
+     String name
+     String url
+}
+
+class Position {
     String title
-    String link
-    String dataTime
-    String subtitle
     String description
-    --
-    Для секций "достижения" и "квалификация"
-    все поля кроме description null
+    YearMonth start
+    YearMonth finish
 }
 
-ListSection *-- ListItem
+Organization *-- Link
+Organization *-- Position
 
 @enduml
