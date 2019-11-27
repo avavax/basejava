@@ -4,6 +4,7 @@ import java.time.YearMonth;
 import java.util.Objects;
 
 public class Position {
+    private static final YearMonth NOW = YearMonth.of(3000, 1);
     private String title;
     private String description;
     private YearMonth start;
@@ -21,6 +22,10 @@ public class Position {
 
     public Position(YearMonth start, YearMonth finish, String title) {
         this(start, finish, title, null);
+    }
+
+    public Position(YearMonth start, String title, String description) {
+        this(start, NOW, title, description);
     }
 
     public String getTitle() {

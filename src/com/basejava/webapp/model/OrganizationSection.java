@@ -1,21 +1,27 @@
 package com.basejava.webapp.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class OrganizationSection extends AbstractSection {
-    private ArrayList<Organization> list;
+    private List<Organization> list;
 
-    public OrganizationSection(ArrayList<Organization> list) {
+    public OrganizationSection(List<Organization> list) {
         Objects.requireNonNull(list, "Organizations must not be null");
         this.list = list;
+    }
+
+    public OrganizationSection(Organization... items) {
+        this(Arrays.asList(items));
     }
 
     public void setList(ArrayList<Organization> list) {
         this.list = list;
     }
 
-    public ArrayList<Organization> getList() {
+    public List<Organization> getList() {
         return list;
     }
 

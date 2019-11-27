@@ -50,4 +50,5 @@ public class Link {
         result = 31 * result + (url != null ? url.hashCode() : 0);
         return result;
     }
+    
 }

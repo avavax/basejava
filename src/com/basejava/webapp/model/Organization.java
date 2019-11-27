@@ -2,17 +2,21 @@ package com.basejava.webapp.model;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Organization {
     private Link link;
-    private ArrayList<Position> positions;
+    private List<Position> positions;
 
-    public Organization (String name,
-                         String url,
-                         ArrayList<Position> positions) {
+    public Organization(String name, String url, Position... positions) {
+        this(new Link(name, url), Arrays.asList(positions));
+    }
+
+    public Organization(Link link, List<Position> positions) {
         Objects.requireNonNull(positions, "Positions must not be null");
-        this.link = new Link(name, url);
+        this.link = link;
         this.positions = positions;
     }
 

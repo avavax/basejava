@@ -8,19 +8,19 @@ public class MainFile {
 
         try {
             File file = new File("./src");
-            recursiveFileTree(file, "");
+            printFileTree(file, "");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void recursiveFileTree(File file, String output) throws IOException {
+    private static void printFileTree(File file, String output) throws IOException {
         System.out.println(output + " " + file.getName());
         if (file.isDirectory()) {
             File[] list = file.listFiles();
             if (list != null) {
                 for (File n : list) {
-                    recursiveFileTree(n, output + "-");
+                    printFileTree(n, output + "-");
                 }
             }
         }
