@@ -1,10 +1,13 @@
 package com.basejava.webapp.model;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class Position {
+public class Position implements Serializable {
+    private static final long serialVersionUID = 1L;
     private static final YearMonth NOW = YearMonth.of(3000, 1);
+
     private String title;
     private String description;
     private YearMonth start;

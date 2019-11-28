@@ -1,9 +1,12 @@
 package com.basejava.webapp.model;
+import java.io.File;
 import java.time.YearMonth;
 import java.util.EnumMap;
 import java.util.Map;
 
 public class ResumeTestData {
+    public static final String STORAGE_DIR = "D:\\JAVA\\basejava\\storage";
+
     private static final String UUID = "uuid1";
     private static final String FULL_NAME = "Григорий Кислин";
 
