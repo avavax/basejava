@@ -16,17 +16,13 @@ public class PathStorage extends AbstractStorage<Path> {
 
     private SerializeStrategy serializer;
 
-    public PathStorage(String dir, String serializeType) {
+    public PathStorage(String dir, SerializeStrategy serialize) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
-        switch (serializeType) {
-            case ("stream") :
-                serializer = new SerializeStream();
-                break;
-        }
+        this.serializer = serialize;
     }
 
     @Override

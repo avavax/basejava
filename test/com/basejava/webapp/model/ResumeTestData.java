@@ -89,7 +89,8 @@ public class ResumeTestData {
                                         "Аспирантура (программист С, С++)")),
                         new Organization("Alcatel", "http://www.alcatel.ru/",
                                 new Position(YearMonth.of(1997, 9),
-                                        YearMonth.of(1998, 3),
+                                        //YearMonth.of(1998, 3),
+                                        null,
                                         "6 месяцев обучения цифровым телефонным сетям (Москва)"))));
 
         return resume;

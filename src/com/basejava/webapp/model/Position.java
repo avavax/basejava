@@ -16,7 +16,6 @@ public class Position implements Serializable {
     public Position(YearMonth start, YearMonth finish, String title, String description) {
         Objects.requireNonNull(title, "Title must not be null");
         Objects.requireNonNull(start, "Start must not be null");
-        Objects.requireNonNull(finish, "Finish must not be null");
         this.title = title;
         this.description = description;
         this.start = start;
@@ -25,10 +24,6 @@ public class Position implements Serializable {
 
     public Position(YearMonth start, YearMonth finish, String title) {
         this(start, finish, title, null);
-    }
-
-    public Position(YearMonth start, String title, String description) {
-        this(start, NOW, title, description);
     }
 
     public String getTitle() {
@@ -65,7 +60,12 @@ public class Position implements Serializable {
 
     @Override
     public String toString() {
-        return start + " - " + finish + " " + title + "\n" + description;
+        return "{\'" +
+                title + '\'' +
+                ", " + ((description == null) ? ' ' : '\'' + description + "\', ") +
+                start +
+                " - " + ((finish == null) ? "сейчас" : finish) +
+                '}';
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Position implements Serializable {
         if (description != null ? !description.equals(position.description) : position.description != null)
             return false;
         if (!start.equals(position.start)) return false;
-        return finish.equals(position.finish);
+        return finish != null ? finish.equals(position.finish) : position.finish == null;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Position implements Serializable {
         int result = title.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + start.hashCode();
-        result = 31 * result + finish.hashCode();
+        result = 31 * result + (finish != null ? finish.hashCode() : 0);
         return result;
     }
 }
