@@ -10,6 +10,9 @@ public class ListSection extends AbstractSection {
 
     private List<String> list;
 
+    public ListSection() {
+    }
+
     public ListSection(List<String> list) {
         Objects.requireNonNull(list, "List must not be null");
         this.list = list;

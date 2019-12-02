@@ -1,21 +1,33 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.YearMonthAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final YearMonth NOW = YearMonth.of(3000, 1);
+    public static final YearMonth NOW = YearMonth.of(3000, 1);
 
     private String title;
     private String description;
+    @XmlJavaTypeAdapter(YearMonthAdapter.class)
     private YearMonth start;
+    @XmlJavaTypeAdapter(YearMonthAdapter.class)
     private YearMonth finish;
+
+    public Position() {
+    }
 
     public Position(YearMonth start, YearMonth finish, String title, String description) {
         Objects.requireNonNull(title, "Title must not be null");
         Objects.requireNonNull(start, "Start must not be null");
+        Objects.requireNonNull(finish, "Finish must not be null");
         this.title = title;
         this.description = description;
         this.start = start;
@@ -64,7 +76,7 @@ public class Position implements Serializable {
                 title + '\'' +
                 ", " + ((description == null) ? ' ' : '\'' + description + "\', ") +
                 start +
-                " - " + ((finish == null) ? "сейчас" : finish) +
+                " - " + ((finish == NOW) ? "сейчас" : finish) +
                 '}';
     }
 

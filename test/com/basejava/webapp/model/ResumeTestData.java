@@ -4,6 +4,8 @@ import java.time.YearMonth;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static com.basejava.webapp.model.Position.NOW;
+
 public class ResumeTestData {
     public static final String STORAGE_DIR = "D:\\JAVA\\basejava\\storage";
 
@@ -90,7 +92,7 @@ public class ResumeTestData {
                         new Organization("Alcatel", "http://www.alcatel.ru/",
                                 new Position(YearMonth.of(1997, 9),
                                         //YearMonth.of(1998, 3),
-                                        null,
+                                        NOW,
                                         "6 месяцев обучения цифровым телефонным сетям (Москва)"))));
 
         return resume;

@@ -1,11 +1,15 @@
 package com.basejava.webapp.model;
 
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.Objects;
 
 public class SimpleSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
     private String description;
+
+    public SimpleSection() {
+    }
 
     public SimpleSection(String description) {
         Objects.requireNonNull(description, "Description must not be null");

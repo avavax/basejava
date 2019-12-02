@@ -10,6 +10,9 @@ public class OrganizationSection extends AbstractSection {
 
     private List<Organization> list;
 
+    public OrganizationSection() {
+    }
+
     public OrganizationSection(List<Organization> list) {
         Objects.requireNonNull(list, "Organizations must not be null");
         this.list = list;
