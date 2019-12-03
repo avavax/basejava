@@ -22,4 +22,11 @@ public class SerializeStreamObject implements SerializeStrategy {
             throw new StorageException("Error read resume", null, e);
         }
     }
+
+    @Override
+    public String getFileName(String uuid) {
+        return uuid + ".data";
+    }
+
+
 }

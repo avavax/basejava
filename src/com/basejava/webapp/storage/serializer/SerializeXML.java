@@ -28,4 +28,9 @@ public class SerializeXML implements SerializeStrategy {
             return XMLParser.unmarshall(r);
         }
     }
+
+    @Override
+    public String getFileName(String uuid) {
+        return uuid + ".xml";
+    }
 }

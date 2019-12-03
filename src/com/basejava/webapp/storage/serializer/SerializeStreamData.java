@@ -5,6 +5,7 @@ import com.basejava.webapp.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,47 +17,58 @@ public class SerializeStreamData implements SerializeStrategy {
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            writeSection(contacts.entrySet(), el -> {
+                dos.writeUTF(el.getKey().name());
+                dos.writeUTF(el.getValue());
+            });
+
             // TODO implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
             dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().toString());
-                switch (entry.getKey()) {
+            writeSection(sections.entrySet(), el -> {
+                SectionType name = el.getKey();
+                AbstractSection value = el.getValue();
+                dos.writeUTF(name.toString());
+                switch (name) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        dos.writeUTF(((SimpleSection)entry.getValue()).getDescription());
+                        dos.writeUTF(((SimpleSection)value).getDescription());
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        List<String> items = (((ListSection)entry.getValue()).getList());
+                        List<String> items = (((ListSection)value).getList());
                         dos.writeInt(items.size());
-                        for (String item : items) {
-                            dos.writeUTF(item);
-                        }
+                        writeSection(items, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Organization> orgs = (((OrganizationSection)entry.getValue()).getList());
-                        dos.writeInt(orgs.size());
-                        for (Organization org : orgs) {
-                            dos.writeUTF(org.getLink().getUrl());
+                        List<Organization> organizations = (((OrganizationSection)value).getList());
+                        dos.writeInt(organizations.size());
+                        writeSection(organizations, org -> {
+                            dos.writeUTF(org.getLink().getUrl() != null ? org.getLink().getUrl() : "");
                             dos.writeUTF(org.getLink().getName());
-                            List<Position> poses = org.getPositions();
-                            dos.writeInt(poses.size());
-                            for (Position pos : poses) {
+                            List<Position> positions = org.getPositions();
+                            dos.writeInt(positions.size());
+                            writeSection(positions, pos -> {
                                 dos.writeUTF(pos.getStart().toString());
                                 dos.writeUTF(pos.getFinish().toString());
                                 dos.writeUTF(pos.getTitle());
-                                dos.writeUTF(pos.getDescription() != null ? pos.getDescription() : "null");
-                            }
-                        }
+                                dos.writeUTF(pos.getDescription() != null ? pos.getDescription() : "");
+                            });
+                        });
                     default:
                 }
-            }
+            });
+        }
+    }
+
+    private interface Function<T> {
+        void applay(T t) throws IOException;
+    }
+
+    private <T> void writeSection(Collection<T> col, Function<T> writer) throws IOException {
+        for (T item : col) {
+            writer.applay(item);
         }
     }
 
@@ -70,6 +82,7 @@ public class SerializeStreamData implements SerializeStrategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
+
             // TODO implements sections
             int numbersSection = dis.readInt();
             for (int i = 0; i < numbersSection; i++) {
@@ -81,37 +94,45 @@ public class SerializeStreamData implements SerializeStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        int stringNumber = dis.readInt();
-                        List<String> items = new ArrayList<>();
-                        for (int j = 0; j < stringNumber; j++) {
-                            items.add(dis.readUTF());
-                        }
-                        resume.addSection(type, new ListSection(items));
+                        resume.addSection(type, new ListSection(readSection(dis.readInt(), new ArrayList<>(), dis::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        int organizationNumber = dis.readInt();
-                        List<Organization> orgs = new ArrayList<>();
-                        for (int j = 0; j < organizationNumber; j++) {
+                        List<Organization> organizations = readSection(dis.readInt(), new ArrayList<>(), () -> {
                             String url = dis.readUTF();
+                            url = url.equals("") ? null : url;
                             String name = dis.readUTF();
-                            List<Position> positions = new ArrayList<>();
-                            int posesNumbers = dis.readInt();
-                            for (int k = 0; k < posesNumbers; k++) {
+                            List<Position> positions = readSection(dis.readInt(), new ArrayList<>(), () -> {
                                 YearMonth start = YearMonth.parse(dis.readUTF());
                                 YearMonth finish = YearMonth.parse(dis.readUTF());
                                 String title = dis.readUTF();
                                 String description = dis.readUTF();
-                                description = description.equals("null") ? null : description;
-                                positions.add(new Position(start, finish, title, description));
-                            }
-                            orgs.add(new Organization(new Link(name, url), positions));
-                        }
-                        resume.addSection(type, new OrganizationSection(orgs));
+                                description = description.equals("") ? null : description;
+                                return new Position(start, finish, title, description);
+                            });
+                            return new Organization(new Link(name, url), positions);
+                        });
+                        resume.addSection(type, new OrganizationSection(organizations));
                     default:
                 }
             }
             return resume;
         }
+    }
+
+    private interface ReadFunction<T> {
+        T applay() throws IOException;
+    }
+
+    private <T> List<T> readSection(int itemNumbers, List<T> list, ReadFunction<T> reader) throws IOException {
+        for (int i = 0; i < itemNumbers; i++) {
+            list.add(reader.applay());
+        }
+        return list;
+    }
+
+    @Override
+    public String getFileName(String uuid) {
+        return uuid + ".data";
     }
 }

@@ -21,4 +21,9 @@ public class SerializeJSON implements SerializeStrategy {
             return JSONParser.read(reader, Resume.class);
         }
     }
+
+    @Override
+    public String getFileName(String uuid) {
+        return uuid + ".json";
+    }
 }

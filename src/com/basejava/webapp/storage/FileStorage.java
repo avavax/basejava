@@ -45,7 +45,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     protected File getSearchKey(String uuid) {
-        return new File(directory, uuid);
+        return new File(directory, serializer.getFileName(uuid));
     }
 
     @Override
