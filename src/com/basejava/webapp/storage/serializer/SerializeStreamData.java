@@ -16,20 +16,17 @@ public class SerializeStreamData implements SerializeStrategy {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            writeSection(contacts.entrySet(), el -> {
+            writeSection(dos, contacts.entrySet(), el -> {
                 dos.writeUTF(el.getKey().name());
                 dos.writeUTF(el.getValue());
             });
 
-            // TODO implements sections
             Map<SectionType, AbstractSection> sections = r.getSections();
-            dos.writeInt(sections.size());
-            writeSection(sections.entrySet(), el -> {
-                SectionType name = el.getKey();
+            writeSection(dos, sections.entrySet(), el -> {
+                SectionType type = el.getKey();
                 AbstractSection value = el.getValue();
-                dos.writeUTF(name.toString());
-                switch (name) {
+                dos.writeUTF(type.name());
+                switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
                         dos.writeUTF(((SimpleSection)value).getDescription());
@@ -37,19 +34,16 @@ public class SerializeStreamData implements SerializeStrategy {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> items = (((ListSection)value).getList());
-                        dos.writeInt(items.size());
-                        writeSection(items, dos::writeUTF);
+                        writeSection(dos, items, dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Organization> organizations = (((OrganizationSection)value).getList());
-                        dos.writeInt(organizations.size());
-                        writeSection(organizations, org -> {
+                        writeSection(dos, organizations, org -> {
                             dos.writeUTF(org.getLink().getUrl() != null ? org.getLink().getUrl() : "");
                             dos.writeUTF(org.getLink().getName());
                             List<Position> positions = org.getPositions();
-                            dos.writeInt(positions.size());
-                            writeSection(positions, pos -> {
+                            writeSection(dos, positions, pos -> {
                                 dos.writeUTF(pos.getStart().toString());
                                 dos.writeUTF(pos.getFinish().toString());
                                 dos.writeUTF(pos.getTitle());
@@ -63,12 +57,13 @@ public class SerializeStreamData implements SerializeStrategy {
     }
 
     private interface Function<T> {
-        void applay(T t) throws IOException;
+        void apply(T t) throws IOException;
     }
 
-    private <T> void writeSection(Collection<T> col, Function<T> writer) throws IOException {
+    private <T> void writeSection(DataOutputStream dos, Collection<T> col, Function<T> writer) throws IOException {
+        dos.writeInt(col.size());
         for (T item : col) {
-            writer.applay(item);
+            writer.apply(item);
         }
     }
 
@@ -78,14 +73,9 @@ public class SerializeStreamData implements SerializeStrategy {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            readElements(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
-            // TODO implements sections
-            int numbersSection = dis.readInt();
-            for (int i = 0; i < numbersSection; i++) {
+            readElements(dis, () -> {
                 SectionType type = SectionType.valueOf(dis.readUTF());
                 switch (type) {
                     case PERSONAL:
@@ -94,15 +84,15 @@ public class SerializeStreamData implements SerializeStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        resume.addSection(type, new ListSection(readSection(dis.readInt(), new ArrayList<>(), dis::readUTF)));
+                        resume.addSection(type, new ListSection(readCollection(dis, new ArrayList<>(), dis::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        List<Organization> organizations = readSection(dis.readInt(), new ArrayList<>(), () -> {
+                        List<Organization> organizations = readCollection(dis, new ArrayList<>(), () -> {
                             String url = dis.readUTF();
                             url = url.equals("") ? null : url;
                             String name = dis.readUTF();
-                            List<Position> positions = readSection(dis.readInt(), new ArrayList<>(), () -> {
+                            List<Position> positions = readCollection(dis, new ArrayList<>(), () -> {
                                 YearMonth start = YearMonth.parse(dis.readUTF());
                                 YearMonth finish = YearMonth.parse(dis.readUTF());
                                 String title = dis.readUTF();
@@ -115,20 +105,32 @@ public class SerializeStreamData implements SerializeStrategy {
                         resume.addSection(type, new OrganizationSection(organizations));
                     default:
                 }
-            }
+            });
             return resume;
         }
     }
 
     private interface ReadFunction<T> {
-        T applay() throws IOException;
+        T apply() throws IOException;
     }
 
-    private <T> List<T> readSection(int itemNumbers, List<T> list, ReadFunction<T> reader) throws IOException {
+    private <T> List<T> readCollection(DataInputStream dis, List<T> list, ReadFunction<T> reader) throws IOException {
+        int itemNumbers = dis.readInt();
         for (int i = 0; i < itemNumbers; i++) {
-            list.add(reader.applay());
+            list.add(reader.apply());
         }
         return list;
+    }
+
+    private interface ReadFunctionMethod {
+        void apply() throws IOException;
+    }
+
+    private void readElements(DataInputStream dis, ReadFunctionMethod method) throws IOException  {
+        int itemNumbers = dis.readInt();
+        for (int i = 0; i < itemNumbers; i++) {
+            method.apply();
+        }
     }
 
     @Override
