@@ -1,5 +1,6 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.ConnectionFactory;
@@ -46,7 +47,9 @@ public class SQLStorage implements Storage {
     public void delete(String uuid) {
         SQLHelper.doExecute(connectionFactory, "DELETE FROM resume WHERE uuid = ?", (item) -> {
             item.setString(1, uuid);
-            item.execute();
+            if (item.executeUpdate() == 0) {
+                throw new NotExistStorageException(uuid);
+            }
         });
     }
 
@@ -55,7 +58,9 @@ public class SQLStorage implements Storage {
         SQLHelper.doExecute(connectionFactory, "UPDATE resume SET full_name = ? WHERE uuid = ?", (item) -> {
             item.setString(1, resume.getFullName());
             item.setString(2, resume.getUuid());
-            item.execute();
+            if (item.executeUpdate() == 0) {
+                throw new NotExistStorageException(resume.getUuid());
+            }
         });
     }
 

@@ -1,5 +1,6 @@
 package com.basejava.webapp.util;
 
+import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.sql.ConnectionFactory;
 
@@ -8,12 +9,17 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLHelper {
+    public static final String SQL_EXIST_ERROR = "23505";
 
     public static void doExecute(ConnectionFactory connectionFactory, String statement, Function maker) throws StorageException {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(statement)) {
             maker.apply(ps);
         } catch (SQLException e) {
+            //System.out.println(e.getSQLState());
+            if (e.getSQLState().equals(SQL_EXIST_ERROR)) {
+                throw new ExistStorageException(null);
+            }
             throw new StorageException(e);
         }
     }
