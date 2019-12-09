@@ -11,21 +11,21 @@ public class MainStream {
 
         System.out.println(minValue(new int[] {4, 3, 2, 3}));
 
-        System.out.println(oddOrEven(Arrays.asList(4, 3, 2, 3, 7, 9)));
+        System.out.println(oddOrEven(Arrays.asList(4, 3, 2, 3, 7, 8)));
     }
 
-    static int minValue(int[] values) {
-        IntStream stream = IntStream.of(values)
+    private static int minValue(int[] values) {
+        return IntStream.of(values)
                 .distinct()
-                .sorted();
-        return stream.reduce(0, (acc, item) -> acc * 10 + item);
+                .sorted()
+                .reduce(0, (acc, item) -> acc * 10 + item);
     }
 
-    static List<Integer> oddOrEven(List<Integer> integers) {
+    private static List<Integer> oddOrEven(List<Integer> integers) {
         Map<Boolean, List<Integer>> map = integers.stream()
             .collect(Collectors.partitioningBy(item -> item % 2 == 0));
         int sum = integers.stream()
                 .reduce(0, Integer::sum);
-        return map.get(sum % 2 == 0);
+        return map.get(sum % 2 != 0);
     }
 }

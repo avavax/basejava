@@ -1,4 +1,6 @@
 package com.basejava.webapp.model;
+import com.basejava.webapp.Config;
+
 import java.io.File;
 import java.time.YearMonth;
 import java.util.EnumMap;
@@ -7,7 +9,7 @@ import java.util.Map;
 import static com.basejava.webapp.model.Position.NOW;
 
 public class ResumeTestData {
-    public static final String STORAGE_DIR = "D:\\JAVA\\basejava\\storage";
+    public static final String STORAGE_DIR = Config.get().getStorageDir().getAbsolutePath();
 
     private static final String UUID = "uuid1";
     private static final String FULL_NAME = "Григорий Кислин";
@@ -20,7 +22,7 @@ public class ResumeTestData {
 
     public static Resume fillResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-
+/*
         // Раздел Контакты
         resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
@@ -94,7 +96,7 @@ public class ResumeTestData {
                                         //YearMonth.of(1998, 3),
                                         NOW,
                                         "6 месяцев обучения цифровым телефонным сетям (Москва)"))));
-
+*/
         return resume;
     }
 
