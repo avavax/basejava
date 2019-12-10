@@ -2,7 +2,6 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.ResumeTestData;
 import org.junit.Assert;
@@ -14,14 +13,14 @@ import java.util.List;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
-    protected static final String UUID_1 = "uuid1";
-    protected static final String UUID_2 = "uuid2";
-    protected static final String UUID_3 = "uuid3";
-    protected static final String UUID_4 = "uuid4";
-    protected static final Resume RESUME_1 = ResumeTestData.fillResume(UUID_1, "Jon Dow");
-    protected static final Resume RESUME_2 = ResumeTestData.fillResume(UUID_2, "Ann Smith");
-    protected static final Resume RESUME_3 = ResumeTestData.fillResume(UUID_3, "Carl Brown");
-    protected static final Resume RESUME_4 = ResumeTestData.fillResume(UUID_4, "Steve Balmer");
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
+    private static final Resume RESUME_1 = ResumeTestData.fillResume(UUID_1, "Jon Dow");
+    private static final Resume RESUME_2 = ResumeTestData.fillResume(UUID_2, "Ann Smith");
+    private static final Resume RESUME_3 = ResumeTestData.fillResume(UUID_3, "Carl Brown");
+    private static final Resume RESUME_4 = ResumeTestData.fillResume(UUID_4, "Steve Balmer");
 
 
     protected AbstractStorageTest(Storage storage) {
