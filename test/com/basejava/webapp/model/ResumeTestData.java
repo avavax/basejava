@@ -22,7 +22,7 @@ public class ResumeTestData {
 
     public static Resume fillResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
-/*
+
         // Раздел Контакты
         resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
@@ -32,7 +32,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
         resume.addContact(ContactType.SITE, "http://gkislin.ru/");
-
+/*
         // Раздел Секции
         Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
