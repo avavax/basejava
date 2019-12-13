@@ -28,14 +28,7 @@ public class SQLStorage implements Storage {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?, ?, ?)")) {
-                for (Map.Entry<ContactType, String> el: resume.getContacts().entrySet()) {
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, el.getKey().name());
-                    ps.setString(3, el.getValue());
-                    ps.execute();
-                }
-            }
+            doInsertContacts(conn, resume);
             return null;
         });
     }
@@ -53,7 +46,7 @@ public class SQLStorage implements Storage {
                     }
                     Resume resume = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        resume.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                        doAddContact(rs, resume);
                     } while (rs.next());
                     return resume;
                 });
@@ -81,7 +74,7 @@ public class SQLStorage implements Storage {
                 }
             }
             doRemoveContact(conn, resume.getUuid());
-            doInsertContact(conn, resume);
+            doInsertContacts(conn, resume);
             return null;
         });
     }
@@ -96,12 +89,9 @@ public class SQLStorage implements Storage {
             Map<String, Resume> map = new LinkedHashMap<>();
             while (rs.next()) {
                 String uuid = rs.getString("uuid");
-                Resume resume = map.get(uuid);
-                if (resume == null) {
-                    resume = new Resume(uuid.trim(), rs.getString("full_name"));
-                    map.put(uuid, resume);
-                }
-                resume.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                String fullName = rs.getString("full_name");
+                map.computeIfAbsent(uuid, item -> new Resume(uuid.trim(), fullName));
+                doAddContact(rs, map.get(uuid));
             }
             return new ArrayList<>(map.values());
         });
@@ -115,7 +105,7 @@ public class SQLStorage implements Storage {
         });
     }
 
-    private void doInsertContact(Connection conn, Resume resume) throws SQLException {
+    private void doInsertContacts(Connection conn, Resume resume) throws SQLException {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
@@ -127,11 +117,17 @@ public class SQLStorage implements Storage {
         }
     }
 
-    private void doRemoveContact(Connection conn, String uuid) {
-        sqlHelper.execute("DELETE  FROM contact WHERE resume_uuid=?", ps -> {
+    private void doRemoveContact(Connection conn, String uuid) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement("DELETE  FROM contact WHERE resume_uuid=?")) {
             ps.setString(1, uuid);
             ps.execute();
-            return null;
-        });
+        }
+    }
+
+    private void doAddContact(ResultSet rs, Resume resume) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
+            resume.addContact(ContactType.valueOf(rs.getString("type")), value);
+        }
     }
 }
