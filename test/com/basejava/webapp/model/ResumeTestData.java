@@ -25,14 +25,13 @@ public class ResumeTestData {
 
         // Раздел Контакты
         resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
-        resume.addContact(ContactType.PHONE, "+7(921) 855-0482");
         resume.addContact(ContactType.SKYPE, "grigory.kislin");
         resume.addContact(ContactType.EMAIL, "gkislin@yandex.ru");
         resume.addContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/gkislin");
         resume.addContact(ContactType.GITHUB, "https://github.com/gkislin");
         resume.addContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473/gkislin");
         resume.addContact(ContactType.SITE, "http://gkislin.ru/");
-/*
+
         // Раздел Секции
         Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
@@ -61,6 +60,7 @@ public class ResumeTestData {
                 "DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,",
                 "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
                 "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"));
+        /*
         resume.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Alcatel", "http://www.alcatel.ru/",

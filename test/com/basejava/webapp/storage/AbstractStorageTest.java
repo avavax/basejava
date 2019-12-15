@@ -2,6 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
+import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.model.ResumeTestData;
 import org.junit.Assert;
@@ -56,6 +57,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
+        RESUME_1.addContact(ContactType.EMAIL, "gkislin@gmail.com");
+        RESUME_1.setFullName("Pamela Anderson");
         storage.update(RESUME_1);
         Assert.assertEquals(RESUME_1, storage.get(UUID_1));
     }
