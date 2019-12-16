@@ -11,6 +11,11 @@ public class SQLStorage implements Storage {
     private final SQLHelper sqlHelper;
 
     public SQLStorage(String dbUrl, String dbUser, String dbPassword) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
         sqlHelper = new SQLHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
@@ -140,27 +145,29 @@ public class SQLStorage implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 SectionType type = e.getKey();
-                StringBuilder sectionValue = new StringBuilder();
+                String sectionValue = null;
                 switch (type) {
                     case PERSONAL:
                     case OBJECTIVE:
-                        sectionValue.append(((SimpleSection) e.getValue()).getDescription());
+                        sectionValue = ((SimpleSection) e.getValue()).getDescription();
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
+                        StringBuilder sb = new StringBuilder();
                         for(String str : ((ListSection) e.getValue()).getList()) {
-                            sectionValue.append(str  + '\n');
+                            sb.append(str  + '\n');
                         }
+                        sectionValue = sb.toString();
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
 
                         break;
                 }
-                if (sectionValue.length() != 0) {
+                if (sectionValue != null) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, type.name());
-                    ps.setString(3, sectionValue.toString());
+                    ps.setString(3, sectionValue);
                     ps.addBatch();
                 }
             }

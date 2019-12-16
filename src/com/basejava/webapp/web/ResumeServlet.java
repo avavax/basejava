@@ -2,9 +2,7 @@ package com.basejava.webapp.web;
 
 import com.basejava.webapp.Config;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.FileStorage;
 import com.basejava.webapp.storage.Storage;
-import com.basejava.webapp.storage.serializer.SerializeXML;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ResumeServlet extends HttpServlet {
-    private final static String STORAGE_DIR = Config.get().getStorageDir().getAbsolutePath();
-    private final static Storage STORAGE = new FileStorage(STORAGE_DIR, new SerializeXML());
+    private final static Storage STORAGE = Config.get().getStorage();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
