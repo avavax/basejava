@@ -30,6 +30,14 @@ public class OrganizationSection extends AbstractSection {
         return list;
     }
 
+    public String toHTML() {
+        StringBuilder result = new StringBuilder();
+        for (Organization item : list) {
+            result.append(item.toHTML());
+        }
+        return result.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

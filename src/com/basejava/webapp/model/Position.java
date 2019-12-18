@@ -70,13 +70,24 @@ public class Position implements Serializable {
         this.finish = finish;
     }
 
+    public String toHTML() {
+        return "<div class=\"row\">"
+                + "<div class=\"col-1\">" + start
+                + "</div>"
+                + "<div class=\"col-1\">" + (finish.equals(NOW) ? "сейчас" : finish)
+                + "</div>"
+                + "<div class=\"col-10\"><strong>" + title + "</strong><br>"
+                + ((description == null) ? ' ' : '\'' + description + "\', ")
+                + "</div></div>";
+    }
+
     @Override
     public String toString() {
         return "{\'" +
                 title + '\'' +
                 ", " + ((description == null) ? ' ' : '\'' + description + "\', ") +
                 start +
-                " - " + ((finish == NOW) ? "сейчас" : finish) +
+                " - " + (finish.equals(NOW) ? "сейчас" : finish) +
                 '}';
     }
 

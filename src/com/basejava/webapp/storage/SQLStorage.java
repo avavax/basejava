@@ -3,6 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.sql.SQLHelper;
+import com.basejava.webapp.util.JSONParser;
 
 import java.sql.*;
 import java.util.*;
@@ -154,14 +155,14 @@ public class SQLStorage implements Storage {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         StringBuilder sb = new StringBuilder();
-                        for(String str : ((ListSection) e.getValue()).getList()) {
+                        for (String str : ((ListSection) e.getValue()).getList()) {
                             sb.append(str  + '\n');
                         }
                         sectionValue = sb.toString();
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-
+                        sectionValue = JSONParser.write(e.getValue(), AbstractSection.class);
                         break;
                 }
                 if (sectionValue != null) {
@@ -212,7 +213,7 @@ public class SQLStorage implements Storage {
                     break;
                 case EXPERIENCE:
                 case EDUCATION:
-
+                    resume.addSection(type, JSONParser.read(value, AbstractSection.class));
                     break;
             }
         }

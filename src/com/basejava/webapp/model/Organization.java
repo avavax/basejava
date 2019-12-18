@@ -54,6 +54,16 @@ public class Organization implements Serializable {
         this.positions = positions;
     }
 
+    public String toHTML() {
+        StringBuilder result = new StringBuilder();
+        result.append(link.toHTML());
+        for (Position item : positions) {
+            result.append(item.toHTML());
+        }
+        result.append("<br>");
+        return result.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

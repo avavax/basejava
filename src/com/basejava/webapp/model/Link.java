@@ -42,6 +42,10 @@ public class Link implements Serializable {
         return name + " (" + url + ") ";
     }
 
+    public String toHTML() {
+        return url != null ? "<p><strong><a href=\"" + url + "\">" + name + "</a></strong></p>" : "<p><strong>" + name + "</strong></p>";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

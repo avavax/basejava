@@ -60,7 +60,7 @@ public class ResumeTestData {
                 "DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle,",
                 "Version control: Subversion, Git, Mercury, ClearCase, Perforce",
                 "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"));
-        /*
+
         resume.addSection(SectionType.EXPERIENCE,
                 new OrganizationSection(
                         new Organization("Alcatel", "http://www.alcatel.ru/",
@@ -96,7 +96,7 @@ public class ResumeTestData {
                                         //YearMonth.of(1998, 3),
                                         NOW,
                                         "6 месяцев обучения цифровым телефонным сетям (Москва)"))));
-*/
+
         return resume;
     }
 

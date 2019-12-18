@@ -10,8 +10,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    //private static final File PROPS = new File("config/resumes.properties");
-    private static final File PROPS = new File("D:/JAVA/basejava/config/resumes.properties");
+    private static final File PROPS = new File(getHomeDir(), "config/resumes.properties");
+    //private static final File PROPS = new File("D:/JAVA/basejava/config/resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private File storageDir;
@@ -38,5 +38,14 @@ public class Config {
 
     public Storage getStorage() {
         return storage;
+    }
+
+    private static File getHomeDir() {
+        String hd = System.getProperty("homeDir");
+        File homeDir = new File(hd == null ? "." : hd);
+        if (!homeDir.isDirectory()) {
+            throw new IllegalStateException("Homedir is not directory: " + hd);
+        }
+        return homeDir;
     }
 }

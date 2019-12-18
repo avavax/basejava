@@ -29,6 +29,10 @@ public class SimpleSection extends AbstractSection {
         return description;
     }
 
+    public String toHTML() {
+        return "<p>" + description + "</p>";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

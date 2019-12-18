@@ -18,32 +18,31 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
         String uuid = request.getParameter("uuid");
-        response.getWriter().write(uuid == null ? getAllResumesTable() : getResumeTable(uuid));
-    }
-
-    private String getAllResumesTable() {
-        StringBuilder table = new StringBuilder();
-        table.append("<table>");
-        table.append("<tr><td>id</td><td>Full Name</td><tr>");
-        for (Resume r : STORAGE.getAllSorted()) {
-            String uuid = r.getUuid();
-            table.append("<tr><td>" + uuid + "</td><td><a href=\"?uuid=" + uuid + "\">" + r.getFullName() + "</td></tr>");
+        String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("resumes", STORAGE.getAllSorted());
+            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+            return;
         }
-        table.append("</table>");
-        return table.toString();
+        Resume resume;
+        switch (action) {
+            case "delete":
+                STORAGE.delete(uuid);
+                response.sendRedirect("resume");
+                return;
+            case "view":
+            case "edit":
+                resume = STORAGE.get(uuid);
+                break;
+            default:
+                throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+        request.setAttribute("resume", resume);
+        request.getRequestDispatcher(
+                ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
+        ).forward(request, response);
+
     }
 
-    private String getResumeTable(String uuid) {
-        StringBuilder table = new StringBuilder();
-        Resume r = STORAGE.get(uuid);
-        table.append("<table>");
-        table.append("<tr><td>id</td><td>" + r.getUuid() + "</td></tr>");
-        table.append("<tr><td>Имя</td><td>" + r.getFullName()+ "</td></tr>");
-        table.append("</table>");
-        return table.toString();
-    }
 }

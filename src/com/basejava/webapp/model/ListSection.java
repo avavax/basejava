@@ -39,6 +39,16 @@ public class ListSection extends AbstractSection {
         return result.toString();
     }
 
+    public String toHTML() {
+        StringBuilder result = new StringBuilder();
+        result.append("<ul>");
+        for (String item : list) {
+            result.append("<li>" + item + "</li>");
+        }
+        result.append("</ul>");
+        return result.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
