@@ -1,8 +1,8 @@
 <%@ page import="com.basejava.webapp.model.ContactType" %>
-<%@ page import="com.basejava.webapp.model.Resume" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="ru" class="h-100">
 <head>
     <title>Список всех резюме</title>
     <meta charset="utf-8">
@@ -34,6 +34,11 @@
                     </tr>
                 </c:forEach>
             </table>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <p><a class="btn btn-primary btn-md" href="resume?action=create" role="button">Создать резюме&raquo;</a></p>
+            </div>
         </div>
     </div>
     </main>

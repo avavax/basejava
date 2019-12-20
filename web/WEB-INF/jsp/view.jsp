@@ -1,9 +1,7 @@
-<%@ page import="com.basejava.webapp.model.SectionType" %>
-<%@ page import="com.basejava.webapp.model.ContactType" %>
-<%@ page import="com.basejava.webapp.model.Resume" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <title>Резюме ${resume.fullName}</title>
     <meta charset="utf-8">
