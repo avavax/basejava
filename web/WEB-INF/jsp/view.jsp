@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="h-100">
 <head>
     <title>Резюме ${resume.fullName}</title>
     <meta charset="utf-8">
@@ -12,7 +12,7 @@
     <link rel="icon" href="img/icon.png"/>
 </head>
 <body class="d-flex flex-column h-100">
-    <jsp:include page="fragments/header-item.jsp"/>
+    <jsp:include page="fragments/header.jsp"/>
 
     <main role="main" class="flex-shrink-0">
     <div class="container">
@@ -30,8 +30,11 @@
             </div>
         </div>
         <c:forEach items="${resume.getSections()}" var="section">
-            <h4>${section.getKey().getTitle()}</h4><hr>
-            <p>${section.getValue().toHTML()}</p>
+            <c:set var="sectionHTML" value="${section.getValue().toHTML()}" />
+            <c:if test="${sectionHTML ne null}">
+                <h4>${section.getKey().getTitle()}</h4><hr>
+                <p>${sectionHTML}</p>
+            </c:if>
         </c:forEach>
     </div>
     </main>

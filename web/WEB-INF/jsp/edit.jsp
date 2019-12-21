@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="h-100">
 <head>
     <title>Резюме ${resume.fullName}</title>
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
     <link rel="icon" href="img/icon.png"/>
 </head>
 <body class="d-flex flex-column h-100">
-<jsp:include page="fragments/header-item.jsp"/>
+<jsp:include page="fragments/header.jsp"/>
 <main role="main" class="flex-shrink-0">
     <div class="container">
         <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
@@ -34,7 +34,6 @@
                         <div class="form-group">
                             <label>${type.title}</label>
                             <input type="text" class="form-control" name="${type.name()}" value="${resume.getContact(type)}">
-                            <!--<button type="button" class="btn btn-sm btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button>-->
                         </div>
                     </c:forEach>
                 </div>
@@ -43,106 +42,71 @@
                 </div>
             </div>
 
-            <jsp:useBean id="SimpleSection" class="com.basejava.webapp.model.SimpleSection" />
+            <c:forEach items="<%=SectionType.values()%>" var="type">
+                <c:set var="value" value="${resume.getSection(type)}" />
+                <h4>${type.getTitle()}</h4>
+                <c:choose>
+                    <c:when test="${(type eq 'OBJECTIVE') || (type eq 'PERSONAL')}">
+                        <textarea class="form-control" name="${type}" rows="3">${value.getDescription().trim()}
+                        </textarea><br>
+                    </c:when>
 
-            <h4>Позиция</h4>
-            <textarea class="form-control" name="OBJECTIVE" rows="3">${(resume.getSection(SectionType.OBJECTIVE)).getDescription()}
-            </textarea><br>
+                    <c:when test="${(type eq 'ACHIEVEMENT') || (type eq 'QUALIFICATIONS')}">
+                        <c:forEach var="section" items="${value.getList()}">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="${type}" value="${section.toString()}">
+                            </div>
+                        </c:forEach>
+                        <button type="button" id="ADD-${type}" class="btn btn-primary btn-md">Добавить</button><br><br>
+                    </c:when>
 
-            <h4>Личные качества</h4>
-            <textarea class="form-control" name="PERSONAL" rows="3">${(resume.getSection(SectionType.PERSONAL)).getDescription()}
-            </textarea><br>
+                    <c:when test="${(type eq 'EXPERIENCE') || (type eq 'EDUCATION')}">
+                        <c:forEach var="organization" items="${value.getList()}">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Название организации</label>
+                                    <input type="text" class="form-control" name="${type}" value="${organization.getLink().getName()}">
+                                </div>
+                                <div class="col-6">
+                                    <label>Ссылка</label>
+                                    <input type="text" class="form-control" name="${type}" value="${organization.getLink().getUrl()}">
+                                </div>
+                            </div>
+                            <c:forEach var="position" items="${organization.getPositions()}">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <label>Начало </label>
+                                        <input type="text" class="form-control" placeholder="YYYY-MM" name="${type}" value="${position.getStart() == ('3000-01') ? 'сейчас' : position.getStart()}">
+                                    </div>
+                                    <div class="col-2">
+                                        <label>Окончание</label>
+                                        <input type="text" class="form-control" placeholder="YYYY-MM" name="${type}" value="${position.getFinish() == ('3000-01') ? 'сейчас' : position.getFinish()}">
+                                    </div>
+                                    <div class="col-8">
+                                        <label>Специальность</label>
+                                        <input type="text" class="form-control" name="${type}" value="${position.getTitle()}">
+                                        <c:if test="${type eq 'EXPERIENCE'}">
+                                            <label>Должностныe обязанности</label>
+                                            <input type="text" class="form-control" name="${type}" value="${position.getDescription()}">
+                                        </c:if>
+                                        <c:if test="${type ne 'EXPERIENCE'}">
+                                            <input type="hidden" class="form-control" name="${type}" value="">
+                                        </c:if>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <button type="button" class="ADD-${type}-POSITION" class="btn btn-primary btn-sm">Добавить позицию</button><br><br>
+                            <input type="hidden" class="form-control" name="${type}" value="end">
+                        </c:forEach><br>
 
-            <h4>Достижения</h4>
-            <c:forEach var="section" items="${resume.getSection(SectionType.ACHIEVEMENT).getList()}">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="${SectionType.ACHIEVEMENT.name()}" value="${section.toString()}">
-                </div>
+                        <button type="button" id="ADD-${type}" class="btn btn-primary btn-md">Добавить место</button><br><br>
+                    </c:when>
+                </c:choose>
             </c:forEach>
-            <button type="button" id="add-achivement" class="btn btn-primary btn-md">Добавить достижение</button><br><br>
-
-            <h4>Квалификация</h4>
-            <c:forEach var="section" items="${resume.getSection(SectionType.QUALIFICATIONS).getList()}">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="${SectionType.QUALIFICATIONS.name()}" value="${section.toString()}">
-                </div>
-            </c:forEach>
-            <button type="button" id="add-qualification" class="btn btn-primary btn-md">Добавить навык</button><br><br>
-
-            <h4>Опыт работы</h4>
-            <c:forEach var="organization" items="${resume.getSection(SectionType.EXPERIENCE).getList()}">
-                <div class="row">
-                    <div class="col-6">
-                        <label>Название организации</label>
-                        <input type="text" class="form-control" name="EXPERIENCE" value="${organization.getLink().getName()}">
-                    </div>
-                    <div class="col-6">
-                        <label>Ссылка</label>
-                        <input type="text" class="form-control" name="EXPERIENCE" value="${organization.getLink().getUrl()}">
-                    </div>
-                </div>
-                <c:forEach var="position" items="${organization.getPositions()}">
-                    <div class="row">
-                        <div class="col-2">
-                            <label>Начало </label>
-                            <input type="text" class="form-control" name="EXPERIENCE" value="${position.getStart()}">
-                        </div>
-                        <div class="col-2">
-                            <label>Окончание</label>
-                            <input type="text" class="form-control" name="EXPERIENCE" value="${position.getFinish()}">
-                        </div>
-                        <div class="col-8">
-                            <label>Должность</label>
-                            <input type="text" class="form-control" name="EXPERIENCE" value="${position.getTitle()}">
-                            <label>Должностныей обязанности</label>
-                            <input type="text" class="form-control" name="EXPERIENCE" value="${position.getDescription()}">
-                        </div>
-                    </div>
-                    <button type="button" class="add-exp-position" class="btn btn-primary btn-sm">Добавить позицию</button><br><br>
-                </c:forEach>
-                <hr>
-                <input type="hidden" class="form-control" name="EXPERIENCE" value="end">
-            </c:forEach><br>
-            <button type="button" id="add-expirience" class="btn btn-primary btn-md">Добавить место работы</button><br><br>
-
-            <h4>Образование</h4>
-            <c:forEach var="organization" items="${resume.getSection(SectionType.EDUCATION).getList()}">
-                <div class="row">
-                    <div class="col-6">
-                        <label>Название организации</label>
-                        <input type="text" class="form-control" name="EDUCATION" value="${organization.getLink().getName()}">
-                    </div>
-                    <div class="col-6">
-                        <label>Ссылка</label>
-                        <input type="text" class="form-control" name="EDUCATION" value="${organization.getLink().getUrl()}">
-                    </div>
-                </div>
-                <c:forEach var="position" items="${organization.getPositions()}">
-                    <div class="row">
-                        <div class="col-2">
-                            <label>Начало </label>
-                            <input type="text" class="form-control" name="EDUCATION" value="${position.getStart()}">
-                        </div>
-                        <div class="col-2">
-                            <label>Окончание</label>
-                            <input type="text" class="form-control" name="EDUCATION" value="${position.getFinish()}">
-                        </div>
-                        <div class="col-8">
-                            <label>Специальность</label>
-                            <input type="text" class="form-control" name="EDUCATION" value="${position.getTitle()}">
-                            <input type="hidden" class="form-control" name="EDUCATION" value="">
-                        </div>
-                    </div>
-                </c:forEach>
-                <hr>
-                <button type="button" class="add-edu-position" class="btn btn-primary btn-sm">Добавить позицию</button><br><br>
-                <input type="hidden" class="form-control" name="EDUCATION" value="end">
-            </c:forEach><br>
-            <button type="button" id="add-education" class="btn btn-primary btn-md">Добавить место учёбы</button><br><br>
 
             <hr>
             <button type="submit" class="btn btn-primary btn-md">Сохранить</button>
-            <button onclick="window.history.back()" class="btn btn-primary btn-md">Отменить</button><br>
+            <button onclick="window.history.back()" class="btn btn-primary btn-md">Отменить</button><br><br>
         </form>
     </div>
 </main>

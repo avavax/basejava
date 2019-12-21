@@ -146,25 +146,7 @@ public class SQLStorage implements Storage {
         try (PreparedStatement ps = conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, AbstractSection> e : resume.getSections().entrySet()) {
                 SectionType type = e.getKey();
-                String sectionValue = null;
-                switch (type) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        sectionValue = ((SimpleSection) e.getValue()).getDescription();
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATIONS:
-                        StringBuilder sb = new StringBuilder();
-                        for (String str : ((ListSection) e.getValue()).getList()) {
-                            sb.append(str  + '\n');
-                        }
-                        sectionValue = sb.toString();
-                        break;
-                    case EXPERIENCE:
-                    case EDUCATION:
-                        sectionValue = JSONParser.write(e.getValue(), AbstractSection.class);
-                        break;
-                }
+                String sectionValue = JSONParser.write(e.getValue(), AbstractSection.class);
                 if (sectionValue != null) {
                     ps.setString(1, resume.getUuid());
                     ps.setString(2, type.name());
@@ -201,21 +183,7 @@ public class SQLStorage implements Storage {
         String value = rs.getString("value");
         SectionType type = SectionType.valueOf(rs.getString("type"));
         if (value != null) {
-            switch (type) {
-                case PERSONAL:
-                case OBJECTIVE:
-                    resume.addSection(type, new SimpleSection(value));
-                    break;
-                case ACHIEVEMENT:
-                case QUALIFICATIONS:
-                    List<String> list = Arrays.asList(value.split("\n"));
-                    resume.addSection(type, new ListSection(list));
-                    break;
-                case EXPERIENCE:
-                case EDUCATION:
-                    resume.addSection(type, JSONParser.read(value, AbstractSection.class));
-                    break;
-            }
+            resume.addSection(type, JSONParser.read(value, AbstractSection.class));
         }
     }
 }
